@@ -65,31 +65,87 @@
       justify-content: space-between;
       height: 68px;
     }
-    .brand img { height: 30px; width: auto; filter: invert(1); }
-    nav ul { display: flex; gap: 28px; list-style: none; }
-    nav a { position: relative; font-size: .9rem; color: var(--muted); padding: 4px 0; transition: color .2s; }
+    .brand img { height: 44px; width: auto; filter: invert(1); }
+    nav ul { display: flex; gap: 40px; list-style: none; counter-reset: n; }
+    nav li { counter-increment: n; }
+    nav a {
+      position: relative;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 6px 0;
+      transition: color .2s;
+    }
+    nav a::before {
+      content: "0" counter(n);
+      font-family: var(--font-body);
+      font-size: .62rem;
+      font-weight: 500;
+      letter-spacing: .1em;
+      color: var(--dim);
+      transition: color .2s;
+    }
     nav a::after {
       content: "";
       position: absolute;
-      left: 0; bottom: 0;
-      height: 1px; width: 100%;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
       background: var(--text);
       transform: scaleX(0);
       transform-origin: left;
       transition: transform .3s ease;
     }
     nav a:hover, nav a.active { color: var(--text); }
+    nav a:hover::before, nav a.active::before { color: var(--muted); }
     nav a:hover::after, nav a.active::after { transform: scaleX(1); }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 12px 20px;
+      border: 1px solid var(--text);
+      background: transparent;
+      color: var(--text);
+      transition: background .2s, color .2s;
+    }
+    .nav-cta svg { transition: transform .2s; }
+    .nav-cta:hover { background: var(--text); color: var(--bg); }
+    .nav-cta:hover svg { transform: translate(2px, -2px); }
     .menu-btn {
       display: none;
+      position: relative;
+      width: 44px;
+      height: 44px;
       background: none;
       border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 14px;
-      font: inherit;
-      font-size: .85rem;
       cursor: pointer;
     }
+    .menu-btn span {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      height: 2px;
+      background: var(--text);
+      transition: transform .25s, opacity .2s, top .25s;
+    }
+    .menu-btn span:nth-child(1) { top: 14px; }
+    .menu-btn span:nth-child(2) { top: 20px; }
+    .menu-btn span:nth-child(3) { top: 26px; }
+    .menu-btn[aria-expanded="true"] span:nth-child(1) { top: 20px; transform: rotate(45deg); }
+    .menu-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .menu-btn[aria-expanded="true"] span:nth-child(3) { top: 20px; transform: rotate(-45deg); }
 
     /* ---------- SHARED ---------- */
     section { padding: 96px 0; border-bottom: 1px solid var(--border); scroll-margin-top: 68px; }
@@ -293,34 +349,132 @@
     .value h5 { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
     .value p { color: var(--muted); font-size: .95rem; }
 
-    .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .gallery figure { overflow: hidden; border: 1px solid var(--border); }
-    .gallery img {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      transition: transform .8s ease;
+    .gallery { columns: 2; column-gap: 20px; }
+    .gallery figure {
+      position: relative;
+      break-inside: avoid;
+      margin: 0 0 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      cursor: zoom-in;
     }
-    .gallery figure:hover img { transform: scale(1.04); }
+    .gallery img { width: 100%; height: auto; transition: transform .8s ease; }
+    .gallery figure:hover img { transform: scale(1.03); }
+    .zoom-hint {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      background: rgba(16,18,21,.78);
+      border: 1px solid var(--border);
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity .25s, transform .25s;
+      pointer-events: none;
+    }
+    .gallery figure:hover .zoom-hint, .gallery figure:focus-visible .zoom-hint { opacity: 1; transform: none; }
+    @media (hover: none) { .zoom-hint { opacity: 1; transform: none; } }
 
+    /* itch.io-style game cards */
+    .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      transition: transform .3s ease, border-color .3s;
+    }
+    .game-card:hover { transform: translateY(-4px); border-color: var(--dim); }
+    .game-thumb {
+      position: relative;
+      aspect-ratio: 315 / 250;
+      overflow: hidden;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .game-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s ease; }
+    .game-card:hover .game-thumb img { transform: scale(1.05); }
+    .game-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      background: var(--text);
+      color: var(--bg);
+    }
+    .game-body { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px 20px; }
+    .game-body h3 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.9rem;
+      line-height: 1.05;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+    .game-body p { color: var(--muted); font-size: .92rem; line-height: 1.5; }
+    .game-meta {
+      margin-top: auto;
+      padding-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: .8rem;
+      color: var(--dim);
+    }
+    .game-meta .platforms { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+    .game-meta .tag { border: 1px solid var(--border); padding: 3px 10px; border-radius: 999px; }
+
+    /* contact links */
     .contact-row { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--border); }
     .contact-row a {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 16px;
       padding: 26px;
       background: var(--surface);
       border-right: 1px solid var(--border);
-      transition: background .2s;
+      transition: background .25s, color .25s;
     }
     .contact-row a:last-child { border-right: 0; }
-    .contact-row a:hover { background: var(--surface-2); }
-    .contact-row .left { display: flex; align-items: center; gap: 14px; }
-    .contact-row i { font-size: 1.3rem; color: var(--muted); }
-    .contact-row strong { font-weight: 600; display: block; font-size: .98rem; }
-    .contact-row small { color: var(--dim); font-size: .82rem; }
-    .contact-row .arrow { color: var(--dim); transition: transform .2s, color .2s; }
-    .contact-row a:hover .arrow { transform: translateX(4px); color: var(--text); }
+    .contact-row .left { display: flex; align-items: center; gap: 16px; min-width: 0; }
+    .contact-row .icon {
+      flex: none;
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      font-size: 1.4rem;
+      transition: background .25s, color .25s, border-color .25s;
+    }
+    .contact-row strong { font-weight: 600; display: block; font-size: 1rem; }
+    .contact-row small { color: var(--dim); font-size: .82rem; transition: color .25s; }
+    .contact-row .arrow {
+      flex: none;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--muted);
+      transition: transform .25s, background .25s, color .25s, border-color .25s;
+    }
+    .contact-row a:hover { background: var(--text); color: var(--bg); }
+    .contact-row a:hover small { color: #4a5159; }
+    .contact-row a:hover .icon { background: var(--bg); color: var(--text); border-color: var(--bg); }
+    .contact-row a:hover .arrow { background: var(--bg); color: var(--text); border-color: var(--bg); transform: translate(3px, -3px); }
 
     /* =====================================================
        SILENTGEARS PAGE (route: #silentgears)
@@ -401,6 +555,44 @@
     }
     .cta p { color: var(--muted); }
 
+    /* ---------- IMAGE VIEWER ---------- */
+    .lb { position: fixed; inset: 0; z-index: 100; background: rgba(10,12,14,.96); display: flex; flex-direction: column; }
+    .lb-bar { height: 60px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid var(--border); }
+    .lb-count { font-size: .85rem; color: var(--muted); }
+    .lb-tools { display: flex; align-items: center; gap: 8px; }
+    .lb-tools button, .lb-nav {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      font-size: .95rem;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .lb-tools button:hover, .lb-nav:hover { background: var(--text); color: var(--bg); }
+    .lb-pct { min-width: 52px; text-align: center; font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .lb-stage { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none; cursor: zoom-in; }
+    .lb-stage.zoomed { cursor: grab; }
+    .lb-stage.grab { cursor: grabbing; }
+    .lb-stage img {
+      max-width: 100%;
+      max-height: calc(100vh - 60px);
+      max-height: calc(100dvh - 60px);
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+      transition: transform .18s ease;
+      will-change: transform;
+    }
+    .lb-stage.grab img { transition: none; }
+    .lb-nav { position: absolute; top: 50%; margin-top: -20px; z-index: 2; }
+    .lb-nav.prev { left: 16px; }
+    .lb-nav.next { right: 16px; }
+
     /* ---------- FOOTER ---------- */
     footer { padding: 36px 0; }
     .footer-inner {
@@ -430,14 +622,30 @@
       .contact-row a { border-right: 0; border-bottom: 1px solid var(--border); }
       .contact-row a:last-child { border-bottom: 0; }
       nav { display: none; }
-      nav.open { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 20px 24px; }
-      nav.open ul { flex-direction: column; gap: 18px; }
+      nav.open {
+        display: block;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        height: calc(100vh - 68px);
+        height: calc(100dvh - 68px);
+        background: var(--bg);
+        padding: 24px 24px 40px;
+        overflow-y: auto;
+      }
+      nav ul { flex-direction: column; gap: 0; }
+      nav a { font-size: 3rem; line-height: 1; padding: 22px 0; gap: 14px; border-bottom: 1px solid var(--border); }
+      nav a::before { font-size: .75rem; }
+      nav a::after { display: none; }
+      .nav-cta { display: none; }
       .menu-btn { display: block; }
     }
 
     @media (max-width: 640px) {
       section { padding: 72px 0; }
-      .cards, .gallery { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr; }
+      .gallery { columns: 1; }
       .feature-info { padding: 28px; }
       .feature-info h3 { font-size: 3rem; }
       .hero-inner { padding: 90px 0 80px; }
@@ -464,7 +672,10 @@
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
-      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav">Menu</button>
+      <div class="header-actions">
+        <a href="https://t.me/ZEROX_GAME_STUDIOS" target="_blank" rel="noopener" class="nav-cta">Join Telegram <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+      </div>
     </div>
   </header>
 
@@ -495,23 +706,22 @@
             <a href="https://www.youtube.com/@Zerox_game_studios" target="_blank" rel="noopener">Watch trailers on YouTube</a>
           </div>
 
-          <article class="feature">
-            <div class="feature-media" role="img" aria-label="SilentGears key art"></div>
-            <div class="feature-info">
-              <span class="status">In development</span>
-              <h3><a href="#silentgears">SilentGears</a></h3>
-              <p>Our flagship project. Explore a quiet world of gears, wires and machinery that keeps running long after everyone has gone.</p>
-              <ul class="specs">
-                <li><span>Platform</span><span>PC</span></li>
-                <li><span>Genre</span><span>Atmospheric exploration</span></li>
-                <li><span>Release</span><span>To be announced</span></li>
-              </ul>
-              <div class="actions">
-                <a href="#silentgears" class="btn btn-primary">View SilentGears</a>
-                <a href="https://t.me/ZEROX_GAME_STUDIOS" target="_blank" rel="noopener" class="btn btn-outline">Follow on Telegram</a>
+          <div class="game-grid">
+            <a class="game-card" href="#silentgears">
+              <div class="game-thumb">
+                <img src="https://cdn.imgurl.ir/uploads/k51183_Negar_1788164380627.jpg" alt="SilentGears key art">
+                <span class="game-badge">In development</span>
               </div>
-            </div>
-          </article>
+              <div class="game-body">
+                <h3>SilentGears</h3>
+                <p>A quiet exploration game set in a world of gears, wires and machinery that keeps running long after everyone has gone.</p>
+                <div class="game-meta">
+                  <span class="platforms"><i class="fa-solid fa-desktop"></i> PC</span>
+                  <span class="tag">Atmospheric exploration</span>
+                </div>
+              </div>
+            </a>
+          </div>
         </div>
       </section>
 
@@ -546,16 +756,16 @@
           <div class="section-title"><h2>Get in touch</h2></div>
           <div class="contact-row">
             <a href="https://t.me/ZEROX_GAME_STUDIOS" target="_blank" rel="noopener">
-              <span class="left"><i class="fa-brands fa-telegram"></i><span><strong>Telegram</strong><small>Latest updates</small></span></span>
-              <span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="left"><span class="icon"><i class="fa-brands fa-telegram"></i></span><span><strong>Telegram</strong><small>Latest updates</small></span></span>
+              <span class="arrow"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></span>
             </a>
             <a href="https://www.youtube.com/@Zerox_game_studios" target="_blank" rel="noopener">
-              <span class="left"><i class="fa-brands fa-youtube"></i><span><strong>YouTube</strong><small>Trailers and devlogs</small></span></span>
-              <span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="left"><span class="icon"><i class="fa-brands fa-youtube"></i></span><span><strong>YouTube</strong><small>Trailers and devlogs</small></span></span>
+              <span class="arrow"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></span>
             </a>
             <a href="https://www.instagram.com/zerox_game_studios" target="_blank" rel="noopener">
-              <span class="left"><i class="fa-brands fa-instagram"></i><span><strong>Instagram</strong><small>Behind the scenes</small></span></span>
-              <span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="left"><span class="icon"><i class="fa-brands fa-instagram"></i></span><span><strong>Instagram</strong><small>Behind the scenes</small></span></span>
+              <span class="arrow"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></span>
             </a>
           </div>
         </div>
@@ -628,8 +838,8 @@
             <a href="https://www.instagram.com/zerox_game_studios" target="_blank" rel="noopener">More on Instagram</a>
           </div>
           <div class="gallery">
-            <figure class="reveal"><img src="https://cdn.imgurl.ir/uploads/z306107_Negar_1788157838729.jpg" alt="SilentGears screenshot 1" loading="lazy" width="1600" height="900"></figure>
-            <figure class="reveal" style="--d:.12s"><img src="https://cdn.imgurl.ir/uploads/l79706_Negar_1788163302729.jpg" alt="SilentGears screenshot 2" loading="lazy" width="1600" height="900"></figure>
+            <figure class="reveal" tabindex="0" role="button" aria-label="Open screenshot 1"><img src="https://cdn.imgurl.ir/uploads/z306107_Negar_1788157838729.jpg" alt="SilentGears screenshot 1"><span class="zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i></span></figure>
+            <figure class="reveal" style="--d:.12s" tabindex="0" role="button" aria-label="Open screenshot 2"><img src="https://cdn.imgurl.ir/uploads/l79706_Negar_1788163302729.jpg" alt="SilentGears screenshot 2"><span class="zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i></span></figure>
           </div>
         </div>
       </section>
@@ -668,6 +878,22 @@
       <a href="https://t.me/MOHAMAD_HOSSEIN_EV188" target="_blank" rel="noopener">Telegram</a>
     </div>
   </footer>
+
+  <div class="lb" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+    <div class="lb-bar">
+      <span class="lb-count" id="lbCount"></span>
+      <div class="lb-tools">
+        <button type="button" id="lbOut" aria-label="Zoom out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+        <span class="lb-pct" id="lbPct">100%</span>
+        <button type="button" id="lbIn" aria-label="Zoom in"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+        <button type="button" id="lbReset" aria-label="Reset zoom"><i class="fa-solid fa-expand"></i></button>
+        <button type="button" id="lbClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="lb-stage" id="lbStage"><img id="lbImg" alt="" draggable="false"></div>
+    <button type="button" class="lb-nav prev" id="lbPrev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+    <button type="button" class="lb-nav next" id="lbNext" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -709,7 +935,7 @@
     route();
 
     // Soft fade-in on scroll. Content stays visible if IntersectionObserver is unavailable.
-    document.querySelectorAll('.section-title, .feature, .card, .value, .about-grid > div:first-child, .contact-row, .features > *, .specs, .cta').forEach((el, i) => {
+    document.querySelectorAll('.section-title, .feature, .card, .game-card, .value, .about-grid > div:first-child, .contact-row, .features > *, .specs, .cta').forEach((el, i) => {
       if (!el.classList.contains('reveal')) el.classList.add('reveal');
     });
     document.querySelectorAll('.cards .card, .values .value, .features > *').forEach((el, i) => {
@@ -742,6 +968,136 @@
       }, { rootMargin: '-45% 0px -50% 0px' });
       links.forEach(a => { const s = document.querySelector(a.getAttribute('href')); if (s) spy.observe(s); });
     }
+
+    // Screenshot viewer: zoom (buttons, wheel, double-click, pinch), drag to pan, arrows and keyboard
+    (function () {
+      const shots = [...document.querySelectorAll('.gallery figure')];
+      const lb = document.getElementById('lightbox');
+      const stage = document.getElementById('lbStage');
+      const img = document.getElementById('lbImg');
+      const pct = document.getElementById('lbPct');
+      const count = document.getElementById('lbCount');
+      const MAX = 5;
+      let idx = 0, scale = 1, tx = 0, ty = 0, moved = false, pinchDist = 0, pinchScale = 1;
+      const pts = new Map();
+
+      function clampPan() {
+        if (scale <= 1) { tx = 0; ty = 0; return; }
+        const mx = Math.max(0, (img.offsetWidth * scale - stage.clientWidth) / 2);
+        const my = Math.max(0, (img.offsetHeight * scale - stage.clientHeight) / 2);
+        tx = Math.min(mx, Math.max(-mx, tx));
+        ty = Math.min(my, Math.max(-my, ty));
+      }
+      function apply() {
+        clampPan();
+        img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+        pct.textContent = Math.round(scale * 100) + '%';
+        stage.classList.toggle('zoomed', scale > 1);
+      }
+      function zoomTo(next, cx, cy) {
+        next = Math.min(MAX, Math.max(1, next));
+        const k = next / scale;
+        tx = cx - (cx - tx) * k;
+        ty = cy - (cy - ty) * k;
+        scale = next;
+        apply();
+      }
+      function rel(x, y) {
+        const r = stage.getBoundingClientRect();
+        return [x - r.left - r.width / 2, y - r.top - r.height / 2];
+      }
+      function reset() { scale = 1; tx = 0; ty = 0; apply(); }
+      function show(i) {
+        idx = (i + shots.length) % shots.length;
+        const src = shots[idx].querySelector('img');
+        img.src = src.currentSrc || src.src;
+        img.alt = src.alt;
+        count.textContent = (idx + 1) + ' / ' + shots.length;
+        reset();
+      }
+      function open(i) {
+        lb.hidden = false;
+        document.body.style.overflow = 'hidden';
+        show(i);
+        document.getElementById('lbClose').focus();
+      }
+      function close() {
+        lb.hidden = true;
+        document.body.style.overflow = '';
+        img.removeAttribute('src');
+        pts.clear();
+        stage.classList.remove('grab');
+      }
+
+      shots.forEach((f, i) => {
+        f.addEventListener('click', () => open(i));
+        f.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); } });
+      });
+      document.getElementById('lbClose').addEventListener('click', close);
+      document.getElementById('lbIn').addEventListener('click', () => zoomTo(scale * 1.4, 0, 0));
+      document.getElementById('lbOut').addEventListener('click', () => zoomTo(scale / 1.4, 0, 0));
+      document.getElementById('lbReset').addEventListener('click', reset);
+      document.getElementById('lbPrev').addEventListener('click', () => show(idx - 1));
+      document.getElementById('lbNext').addEventListener('click', () => show(idx + 1));
+
+      stage.addEventListener('wheel', e => {
+        e.preventDefault();
+        const [cx, cy] = rel(e.clientX, e.clientY);
+        zoomTo(scale * (e.deltaY < 0 ? 1.18 : 1 / 1.18), cx, cy);
+      }, { passive: false });
+      stage.addEventListener('dblclick', e => {
+        const [cx, cy] = rel(e.clientX, e.clientY);
+        if (scale > 1) zoomTo(1, 0, 0); else zoomTo(2.5, cx, cy);
+      });
+      stage.addEventListener('pointerdown', e => {
+        stage.setPointerCapture(e.pointerId);
+        pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        moved = false;
+        stage.classList.add('grab');
+        if (pts.size === 2) {
+          const [a, b] = [...pts.values()];
+          pinchDist = Math.hypot(a.x - b.x, a.y - b.y);
+          pinchScale = scale;
+        }
+      });
+      stage.addEventListener('pointermove', e => {
+        const prev = pts.get(e.pointerId);
+        if (!prev) return;
+        const cur = { x: e.clientX, y: e.clientY };
+        pts.set(e.pointerId, cur);
+        if (pts.size === 2) {
+          const [a, b] = [...pts.values()];
+          const d = Math.hypot(a.x - b.x, a.y - b.y);
+          const [cx, cy] = rel((a.x + b.x) / 2, (a.y + b.y) / 2);
+          zoomTo(pinchScale * d / pinchDist, cx, cy);
+          moved = true;
+        } else if (scale > 1) {
+          tx += cur.x - prev.x;
+          ty += cur.y - prev.y;
+          moved = true;
+          apply();
+        }
+      });
+      const up = e => { pts.delete(e.pointerId); if (!pts.size) stage.classList.remove('grab'); };
+      stage.addEventListener('pointerup', up);
+      stage.addEventListener('pointercancel', up);
+      // tap on the dark area around the image closes the viewer
+      stage.addEventListener('click', e => {
+        const r = img.getBoundingClientRect();
+        const outside = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+        if (outside && !moved) close();
+      });
+      document.addEventListener('keydown', e => {
+        if (lb.hidden) return;
+        if (e.key === 'Escape') close();
+        else if (e.key === 'ArrowLeft') show(idx - 1);
+        else if (e.key === 'ArrowRight') show(idx + 1);
+        else if (e.key === '+' || e.key === '=') zoomTo(scale * 1.4, 0, 0);
+        else if (e.key === '-') zoomTo(scale / 1.4, 0, 0);
+        else if (e.key === '0') reset();
+      });
+      img.addEventListener('load', apply);
+    })();
   </script>
 </body>
 </html>
