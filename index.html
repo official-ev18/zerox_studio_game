@@ -675,7 +675,7 @@
     .modal-x { flex: none; width: 40px; height: 40px; display: grid; place-items: center; background: none; color: var(--muted); border: 1px solid var(--border); border-radius: 50%; cursor: pointer; transition: background .2s, color .2s; }
     .modal-x:hover { background: var(--text); color: var(--bg); }
     .modal-form { background: none; border: 0; padding: 0; margin: 0; }
-    .modal-text { color: var(--muted); font-size: 1rem; margin-bottom: 24px; }
+    .modal-text { display: block; color: var(--text); font-size: 1.02rem; line-height: 1.8; margin: 0 0 24px; direction: rtl; text-align: right; }
     .modal-form .cmt-form-note { color: var(--dim); font-size: .82rem; margin-bottom: 4px; }
     .modal-foot { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
     .modal-foot .btn-outline { background: none; }
@@ -1290,25 +1290,30 @@
       let total = 0;
     })();
 
-    // Confirmation modal after a comment is sent
+    // Confirmation modal after a comment is sent (no page jump)
     (function () {
       const modal = document.getElementById('postModal');
       const form = document.getElementById('cmtForm');
       if (!modal || !form) return;
+      let savedY = 0;
       function close() {
         modal.hidden = true;
         document.body.classList.remove('modal-open');
+        window.scrollTo({ top: savedY, behavior: 'instant' });
       }
       function open() {
+        savedY = window.scrollY;
         modal.hidden = false;
         document.body.classList.add('modal-open');
-        modal.querySelector('.modal-foot .btn').focus();
+        modal.querySelector('.modal-foot .btn').focus({ preventScroll: true });
       }
       modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
       document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) close(); });
       form.addEventListener('submit', e => {
         e.preventDefault();
-        setTimeout(() => { form.reset(); open(); }, 0);
+        e.stopImmediatePropagation();
+        form.reset();
+        open();
       });
     })();
   </script>
