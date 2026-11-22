@@ -11,7 +11,7 @@
   <meta property="og:description" content="An independent game studio. Home of SilentGears.">
   <meta property="og:image" content="https://cdn.imgurl.ir/uploads/k51183_Negar_1788164380627.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="https://cdn.imgurl.ir/uploads/b18142_Negar_1789379626960.png">
+  <link rel="icon" type="image/png" href="https://i.ibb.co/HLZZW09r/Negar-1789379626960.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,22 +90,10 @@
       color: var(--dim);
       transition: color .2s;
     }
-    nav a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 2px;
-      background: var(--text);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform .3s ease;
-    }
     nav a:hover, nav a.active { color: var(--text); }
     nav a:hover::before, nav a.active::before { color: var(--muted); }
-    nav a:hover::after, nav a.active::after { transform: scaleX(1); }
     .header-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-backdrop, .drawer-cta { display: none; }
     .nav-cta {
       display: inline-flex;
       align-items: center;
@@ -131,6 +119,7 @@
       background: none;
       border: 1px solid var(--border);
       cursor: pointer;
+      z-index: 50;
     }
     .menu-btn span {
       position: absolute;
@@ -622,6 +611,45 @@
     .lb-nav.prev { left: 16px; }
     .lb-nav.next { right: 16px; }
 
+    /* ===== SilentGears community / comments ===== */
+    .sg-community { border-top: 1px solid var(--border); padding: 40px 0 72px; }
+    .sg-community-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 32px; align-items: start; }
+    .cmt-form { background: var(--surface); border: 1px solid var(--border); padding: 20px; margin-bottom: 22px; }
+    .cmt-form label { display: block; font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+    .cmt-form input, .cmt-form textarea {
+      width: 100%;
+      font: inherit;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .cmt-form textarea { min-height: 110px; resize: vertical; }
+    .cmt-form input:focus, .cmt-form textarea:focus { border-color: var(--dim); box-shadow: 0 0 0 3px rgba(236,237,235,.08); }
+    .cmt-form .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .cmt-form small { color: var(--dim); font-size: .8rem; }
+    .cmt-list { display: flex; flex-direction: column; gap: 10px; }
+    .cmt { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; padding: 16px; background: var(--surface); border: 1px solid var(--border); }
+    .cmt-av { width: 44px; height: 44px; display: grid; place-items: center; background: #282826; border: 1px solid var(--border); font-family: var(--font-display); font-size: 1.4rem; color: var(--text); }
+    .cmt-head { display: flex; justify-content: space-between; gap: 10px; font-size: .82rem; color: var(--dim); margin-bottom: 6px; }
+    .cmt-head b { color: var(--text); font-weight: 600; }
+    .cmt p { color: var(--muted); font-size: .95rem; overflow-wrap: anywhere; }
+    .cmt-empty { color: var(--dim); font-size: .9rem; padding: 18px; border: 1px dashed var(--border); text-align: center; }
+    .cmt-side { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 92px; }
+    .cmt-box { background: var(--surface); border: 1px solid var(--border); padding: 18px; }
+    .cmt-box h4 { font-size: .74rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .cmt-box ul { list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: .88rem; }
+    .cmt-box li { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); }
+    .cmt-box li span:last-child { color: var(--text); }
+    .cmt-box .btn { width: 100%; justify-content: center; }
+    @media (max-width: 960px) {
+      .sg-community-grid { grid-template-columns: minmax(0, 1fr); }
+      .cmt-side { position: static; }
+    }
+
     /* ---------- FOOTER ---------- */
     footer { padding: 36px 0; }
     .footer-inner {
@@ -654,23 +682,58 @@
       .contact-row { grid-template-columns: 1fr; }
       .contact-row a { border-right: 0; border-bottom: 1px solid var(--border); }
       .contact-row a:last-child { border-bottom: 0; }
-      nav { display: none; }
-      nav.open {
+      header.site-header { background: var(--bg); backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .nav-backdrop {
         display: block;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        height: calc(100vh - 68px);
-        height: calc(100dvh - 68px);
-        background: var(--bg);
-        padding: 24px 24px 40px;
-        overflow-y: auto;
+        position: fixed;
+        inset: 0;
+        z-index: 30;
+        background: rgba(0,0,0,.6);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .3s ease;
       }
+      .nav-backdrop.show { opacity: 1; pointer-events: auto; }
+      nav {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        width: min(86vw, 360px);
+        padding: 92px 28px 32px;
+        background: linear-gradient(180deg, var(--surface-2), var(--surface));
+        border-left: 1px solid var(--border);
+        box-shadow: -24px 0 60px rgba(0,0,0,.55);
+        overflow-y: auto;
+        transform: translateX(105%);
+        visibility: hidden;
+        transition: transform .38s cubic-bezier(.22,.8,.2,1), visibility 0s linear .38s;
+      }
+      nav.open { transform: none; visibility: visible; transition: transform .38s cubic-bezier(.22,.8,.2,1), visibility 0s; }
+      nav .drawer-cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: auto;
+        padding: 16px 20px;
+        border: 1px solid var(--text);
+        font-family: var(--font-body);
+        font-size: .82rem;
+        font-weight: 600;
+        letter-spacing: .12em;
+        line-height: 1.2;
+        color: var(--text);
+        background: transparent;
+      }
+      nav .drawer-cta::before, nav .drawer-cta::after { display: none; }
+      nav .drawer-cta:hover { background: var(--text); color: var(--bg); }
       nav ul { flex-direction: column; gap: 0; }
-      nav a { font-size: 3rem; line-height: 1; padding: 22px 0; gap: 14px; border-bottom: 1px solid var(--border); }
-      nav a::before { font-size: .75rem; }
-      nav a::after { display: none; }
+      nav a { font-size: 2.6rem; line-height: 1; padding: 18px 0; gap: 14px; }
+      nav a::before { display: none; }
       .nav-cta { display: none; }
       .menu-btn { display: block; }
     }
@@ -702,12 +765,14 @@
   <header class="site-header">
     <div class="wrap header-inner">
       <a href="#" class="brand"><img src="https://i.ibb.co/DPmkTFVS/Negar-1794849199419.png" alt="The Zerox Game Studios"></a>
+      <div class="nav-backdrop" id="navBackdrop"></div>
       <nav id="nav">
         <ul>
           <li><a href="#games">Games</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
+        <a href="https://t.me/ZEROX_GAME_STUDIOS" target="_blank" rel="noopener" class="drawer-cta">Join Telegram <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
       </nav>
       <div class="header-actions">
         <a href="https://t.me/ZEROX_GAME_STUDIOS" target="_blank" rel="noopener" class="nav-cta">Join Telegram <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
@@ -872,6 +937,40 @@
           <div class="sg-tags"><span>Atmospheric</span><span>Exploration</span><span>First Person</span><span>Mystery</span></div>
         </aside>
       </div>
+
+      <section class="sg-community">
+        <div class="wrap">
+          <div class="sg-bar"><span>Comments</span><span id="cmtCount">0 comments</span></div>
+          <div class="sg-community-grid">
+            <div>
+              <form class="cmt-form" id="cmtForm" autocomplete="off">
+                <label for="cmtName">Name</label>
+                <input id="cmtName" maxlength="40" placeholder="Your name" required>
+                <label for="cmtText">Comment</label>
+                <textarea id="cmtText" maxlength="500" placeholder="Share your thoughts about SilentGears..." required></textarea>
+                <div class="row">
+                  <small>Comments are shown on this page for this visit only.</small>
+                  <button type="submit" class="btn btn-primary">Post comment</button>
+                </div>
+              </form>
+              <div class="cmt-list" id="cmtList">
+                <div class="cmt-empty" id="cmtEmpty">No comments yet. Be the first to write one.</div>
+              </div>
+            </div>
+            <aside class="cmt-side">
+              <div class="cmt-box">
+                <h4>Community</h4>
+                <ul>
+                  <li><span>Followers on Telegram</span><span>Follow</span></li>
+                  <li><span>Trailers on YouTube</span><span>Watch</span></li>
+                  <li><span>Latest news</span><span>Telegram</span></li>
+                </ul>
+              </div>
+              <a href="https://t.me/ZEROX_GAME_STUDIOS" target="_blank" rel="noopener" class="btn btn-outline">Join the community <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+            </aside>
+          </div>
+        </div>
+      </section>
     </div>
 
   </main>
@@ -914,14 +1013,19 @@
 
     const nav = document.getElementById('nav');
     const menuBtn = document.getElementById('menuBtn');
-    menuBtn.addEventListener('click', () => {
-      const open = nav.classList.toggle('open');
+    const backdrop = document.getElementById('navBackdrop');
+    function setMenu(open) {
+      nav.classList.toggle('open', open);
+      backdrop.classList.toggle('show', open);
       menuBtn.setAttribute('aria-expanded', open);
-    });
-    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      nav.classList.remove('open');
-      menuBtn.setAttribute('aria-expanded', 'false');
-    }));
+      menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    menuBtn.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+    backdrop.addEventListener('click', () => setMenu(false));
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) setMenu(false); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 960) setMenu(false); });
 
     const home = document.getElementById('home');
     const game = document.getElementById('silentgears');
@@ -1121,6 +1225,46 @@
         else if (e.key === '0') reset();
       });
       img.addEventListener('load', apply);
+    })();
+
+    // SilentGears comments: kept in memory for this visit only (no backend)
+    (function () {
+      const form = document.getElementById('cmtForm');
+      if (!form) return;
+      const list = document.getElementById('cmtList');
+      const empty = document.getElementById('cmtEmpty');
+      const count = document.getElementById('cmtCount');
+      const name = document.getElementById('cmtName');
+      const text = document.getElementById('cmtText');
+      let total = 0;
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const n = name.value.trim(), t = text.value.trim();
+        if (!n || !t) return;
+        total++;
+        empty.style.display = 'none';
+        const item = document.createElement('div');
+        item.className = 'cmt';
+        const av = document.createElement('div');
+        av.className = 'cmt-av';
+        av.textContent = n.charAt(0).toUpperCase();
+        const body = document.createElement('div');
+        const head = document.createElement('div');
+        head.className = 'cmt-head';
+        const who = document.createElement('b');
+        who.textContent = n;
+        const when = document.createElement('span');
+        when.textContent = new Date().toLocaleString();
+        head.append(who, when);
+        const p = document.createElement('p');
+        p.textContent = t;
+        body.append(head, p);
+        item.append(av, body);
+        list.prepend(item);
+        count.textContent = total + (total === 1 ? ' comment' : ' comments');
+        text.value = '';
+        text.focus();
+      });
     })();
   </script>
 </body>
