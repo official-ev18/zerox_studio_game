@@ -986,7 +986,7 @@
                 <label for="cmtText">Comment</label>
                 <textarea id="cmtText" maxlength="500" placeholder="Share your thoughts about SilentGears..." required></textarea>
                 <div class="row">
-                  <small>Comments are shown on this page for this visit only.</small>
+                  <small>Commenting is not active yet.</small>
                   <button type="submit" class="btn btn-primary">Post comment</button>
                 </div>
               </form>
@@ -1033,10 +1033,10 @@
     <div class="modal-backdrop" data-close></div>
     <div class="modal-box">
       <div class="modal-head">
-        <h3 id="postTitle">Comment sent</h3>
+        <h3 id="postTitle">Under construction</h3>
         <button type="button" class="modal-x" data-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <p class="modal-text">Thanks for sharing your thoughts. Your comment has been posted below.</p>
+      <p class="modal-text">فعلاً سایت در حال ساخت است. بزودی نظردهی فعال می‌شود.</p>
       <div class="modal-foot">
         <button type="button" class="btn btn-primary" data-close>OK</button>
       </div>
@@ -1288,34 +1288,6 @@
       const name = document.getElementById('cmtName');
       const text = document.getElementById('cmtText');
       let total = 0;
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        const n = name.value.trim(), t = text.value.trim();
-        if (!n || !t) return;
-        total++;
-        empty.style.display = 'none';
-        const item = document.createElement('div');
-        item.className = 'cmt';
-        const av = document.createElement('div');
-        av.className = 'cmt-av';
-        av.textContent = n.charAt(0).toUpperCase();
-        const body = document.createElement('div');
-        const head = document.createElement('div');
-        head.className = 'cmt-head';
-        const who = document.createElement('b');
-        who.textContent = n;
-        const when = document.createElement('span');
-        when.textContent = new Date().toLocaleString();
-        head.append(who, when);
-        const p = document.createElement('p');
-        p.textContent = t;
-        body.append(head, p);
-        item.append(av, body);
-        list.prepend(item);
-        count.textContent = total + (total === 1 ? ' comment' : ' comments');
-        text.value = '';
-        text.focus();
-      });
     })();
 
     // Confirmation modal after a comment is sent
@@ -1334,7 +1306,8 @@
       }
       modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
       document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) close(); });
-      form.addEventListener('submit', () => {
+      form.addEventListener('submit', e => {
+        e.preventDefault();
         setTimeout(() => { form.reset(); open(); }, 0);
       });
     })();
