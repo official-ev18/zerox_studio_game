@@ -155,8 +155,8 @@
       border: 1px solid var(--text);
       transition: background .2s, color .2s;
     }
-    .btn-primary { background: #282826; color: var(--text); border-color: #282826; }
-    .btn-primary:hover { background: var(--text); color: #282826; border-color: var(--text); }
+    .btn-primary { background: #3B3D41; color: var(--text); border-color: #3B3D41; }
+    .btn-primary:hover { background: var(--text); color: #3B3D41; border-color: var(--text); }
     .btn-outline { background: transparent; color: var(--text); }
     .btn-outline:hover { background: var(--text); color: var(--bg); }
 
@@ -383,8 +383,8 @@
     .spot-desc { color: var(--muted); font-size: .9rem; }
     .spot-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .chip { font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-    .price { font-size: .82rem; font-weight: 600; padding: 8px 14px; background: #282826; color: var(--text); border: 1px solid #282826; transition: background .2s, color .2s; }
-    .price:hover { background: var(--text); color: #282826; border-color: var(--text); }
+    .price { font-size: .82rem; font-weight: 600; padding: 8px 14px; background: #3B3D41; color: var(--text); border: 1px solid #3B3D41; transition: background .2s, color .2s; }
+    .price:hover { background: var(--text); color: #3B3D41; border-color: var(--text); }
     .game-list { display: flex; flex-direction: column; gap: 6px; }
     .game-row {
       position: relative;
@@ -506,7 +506,7 @@
     .sg-side { position: sticky; top: 92px; display: flex; flex-direction: column; gap: 14px; }
     .sg-capsule { width: 100%; aspect-ratio: 460 / 215; object-fit: cover; border: 1px solid var(--border); display: block; }
     .sg-buy { background: var(--surface); border: 1px solid var(--border); padding: 18px; }
-    .sg-buy .chip { display: inline-block; font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: 5px 10px; background: #282826; color: var(--text); margin-bottom: 12px; }
+    .sg-buy .chip { display: inline-block; font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: 5px 10px; background: #3B3D41; color: var(--text); margin-bottom: 12px; }
     .sg-buy p { color: var(--muted); font-size: .9rem; margin-bottom: 14px; }
     .sg-buy .btn { width: 100%; justify-content: center; }
     .sg-buy .btn + .btn { margin-top: 8px; }
@@ -612,6 +612,7 @@
     .lb-nav.next { right: 16px; }
 
     /* ===== SilentGears community / comments ===== */
+    .sg-bar-plain { border-bottom: 0; padding-bottom: 0; margin-bottom: 18px; }
     .sg-community { border-top: 1px solid var(--border); padding: 40px 0 72px; }
     .sg-community-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 32px; align-items: start; }
     .cmt-form { background: var(--surface); border: 1px solid var(--border); padding: 20px; margin-bottom: 22px; }
@@ -633,7 +634,7 @@
     .cmt-form small { color: var(--dim); font-size: .8rem; }
     .cmt-list { display: flex; flex-direction: column; gap: 10px; }
     .cmt { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; padding: 16px; background: var(--surface); border: 1px solid var(--border); }
-    .cmt-av { width: 44px; height: 44px; display: grid; place-items: center; background: #282826; border: 1px solid var(--border); font-family: var(--font-display); font-size: 1.4rem; color: var(--text); }
+    .cmt-av { width: 44px; height: 44px; display: grid; place-items: center; background: #3B3D41; border: 1px solid var(--border); font-family: var(--font-display); font-size: 1.4rem; color: var(--text); }
     .cmt-head { display: flex; justify-content: space-between; gap: 10px; font-size: .82rem; color: var(--dim); margin-bottom: 6px; }
     .cmt-head b { color: var(--text); font-weight: 600; }
     .cmt p { color: var(--muted); font-size: .95rem; overflow-wrap: anywhere; }
@@ -648,6 +649,43 @@
     @media (max-width: 960px) {
       .sg-community-grid { grid-template-columns: minmax(0, 1fr); }
       .cmt-side { position: static; }
+    }
+
+    .cmt-open { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); padding: 18px 20px; margin-bottom: 22px; }
+    .cmt-open p { color: var(--muted); font-size: .95rem; }
+    .cmt-open .btn { gap: 10px; }
+
+    /* ===== Comment modal ===== */
+    .modal { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 20px; }
+    .modal[hidden] { display: none; }
+    .modal-backdrop { position: absolute; inset: 0; background: rgba(5,6,8,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: modalFade .25s ease both; }
+    .modal-box {
+      position: relative;
+      width: min(560px, 100%);
+      max-height: calc(100dvh - 40px);
+      overflow-y: auto;
+      padding: 28px;
+      background: linear-gradient(180deg, var(--surface-2), var(--surface));
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px -20px rgba(0,0,0,.75), 0 0 0 1px rgba(236,237,235,.05);
+      animation: modalPop .34s cubic-bezier(.22,.8,.2,1) both;
+    }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .modal-head h3 { font-family: var(--font-display); font-weight: 400; font-size: 2.3rem; line-height: 1; letter-spacing: .02em; text-transform: uppercase; }
+    .modal-x { flex: none; width: 40px; height: 40px; display: grid; place-items: center; background: none; color: var(--muted); border: 1px solid var(--border); border-radius: 50%; cursor: pointer; transition: background .2s, color .2s; }
+    .modal-x:hover { background: var(--text); color: var(--bg); }
+    .modal-form { background: none; border: 0; padding: 0; margin: 0; }
+    .modal-text { color: var(--muted); font-size: 1rem; margin-bottom: 24px; }
+    .modal-form .cmt-form-note { color: var(--dim); font-size: .82rem; margin-bottom: 4px; }
+    .modal-foot { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+    .modal-foot .btn-outline { background: none; }
+    .modal-foot .btn { min-width: 130px; justify-content: center; }
+    @keyframes modalFade { from { opacity: 0; } }
+    @keyframes modalPop { from { opacity: 0; transform: translateY(18px) scale(.97); } }
+    body.modal-open { overflow: hidden; }
+    @media (max-width: 640px) {
+      .modal-box { padding: 22px; }
+      .modal-head h3 { font-size: 2rem; }
     }
 
     /* ---------- FOOTER ---------- */
@@ -934,13 +972,12 @@
             <li><span>Genre</span><span>Atmospheric exploration</span></li>
             <li><span>Perspective</span><span>First person</span></li>
           </ul>
-          <div class="sg-tags"><span>Atmospheric</span><span>Exploration</span><span>First Person</span><span>Mystery</span></div>
         </aside>
       </div>
 
       <section class="sg-community">
         <div class="wrap">
-          <div class="sg-bar"><span>Comments</span><span id="cmtCount">0 comments</span></div>
+          <div class="sg-bar sg-bar-plain"><span>Comments</span><span id="cmtCount">0 comments</span></div>
           <div class="sg-community-grid">
             <div>
               <form class="cmt-form" id="cmtForm" autocomplete="off">
@@ -991,6 +1028,20 @@
       <a href="https://t.me/MOHAMAD_HOSSEIN_EV188" target="_blank" rel="noopener">Telegram</a>
     </div>
   </footer>
+
+  <div class="modal" id="postModal" hidden role="dialog" aria-modal="true" aria-labelledby="postTitle">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3 id="postTitle">Comment sent</h3>
+        <button type="button" class="modal-x" data-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <p class="modal-text">Thanks for sharing your thoughts. Your comment has been posted below.</p>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-primary" data-close>OK</button>
+      </div>
+    </div>
+  </div>
 
   <div class="lb" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
     <div class="lb-bar">
@@ -1264,6 +1315,27 @@
         count.textContent = total + (total === 1 ? ' comment' : ' comments');
         text.value = '';
         text.focus();
+      });
+    })();
+
+    // Confirmation modal after a comment is sent
+    (function () {
+      const modal = document.getElementById('postModal');
+      const form = document.getElementById('cmtForm');
+      if (!modal || !form) return;
+      function close() {
+        modal.hidden = true;
+        document.body.classList.remove('modal-open');
+      }
+      function open() {
+        modal.hidden = false;
+        document.body.classList.add('modal-open');
+        modal.querySelector('.modal-foot .btn').focus();
+      }
+      modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) close(); });
+      form.addEventListener('submit', () => {
+        setTimeout(() => { form.reset(); open(); }, 0);
       });
     })();
   </script>
