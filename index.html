@@ -1135,7 +1135,7 @@
           if (e.isIntersecting) links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
         });
       }, { rootMargin: '-45% 0px -50% 0px' });
-      links.forEach(a => { const s = document.querySelector(a.getAttribute('href')); if (s) spy.observe(s); });
+      links.filter(a => a.getAttribute('href').startsWith('#')).forEach(a => { const s = document.getElementById(a.getAttribute('href').slice(1)); if (s) spy.observe(s); });
     }
 
     // Screenshot viewer: zoom (buttons, wheel, double-click, pinch), drag to pan, arrows and keyboard
